@@ -45,7 +45,7 @@ def main():
             "Enter monthly investment:\t", 0, 1000)
         yearly_interest_rate = validation.get_float(
             "Enter yearly interest rate:\t", 0, 15)
-        years = validation.get_int("Enter number of years:\t\t", 0, 100)
+        years = validation.get_int("Enter number of years:\t\t", 0, 50)
 
         # get and display future value
         future_value = calculate_future_value(
