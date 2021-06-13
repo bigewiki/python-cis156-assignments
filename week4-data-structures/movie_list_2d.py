@@ -5,6 +5,7 @@ def display_menu():
     print("list - List all movies")
     print("add -  Add a movie")
     print("del -  Delete a movie")
+    print("find -  Find a movie")
     print("exit - Exit program")
     print()
 
@@ -17,7 +18,8 @@ def list(movie_list):
         i = 1
         for movie in movie_list:
             row = movie
-            print(f'{i}. {row[0]} {row[1]} @ {row[2]}')
+            # refactored to interpolate string, added price value
+            print(f'{i}. {row[0]} ({row[1]}) @ {row[2]}')
             i += 1
         print()
 
@@ -43,6 +45,20 @@ def delete(movie_list):
         print(movie[0] + " was deleted.\n")
 
 
+def find_by_year(list):
+    year = int(input("Year: "))
+    # initialize results
+    results = []
+    # look for matching years
+    for movie in list:
+        if int(movie[1]) == year:
+            # add to results
+            results.append(movie)
+    # print results
+    for result in results:
+        print(f'{result[0]} was released in {year}')
+
+
 def main():
     movie_list = [["Monty Python and the Holy Grail", 1975, 9.95],
                   ["On the Waterfront", 1954, 5.59],
@@ -57,6 +73,8 @@ def main():
             add(movie_list)
         elif command == "del":
             delete(movie_list)
+        elif command == "find":
+            find_by_year(movie_list)
         elif command == "exit":
             break
         else:
