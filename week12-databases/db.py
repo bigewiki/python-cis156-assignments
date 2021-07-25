@@ -11,6 +11,7 @@ conn = None
 def connect():
     global conn
     if not conn:
+        # Updated DB path for my system
         DB_FILE = "/home/edward/sandbox/murach/_db/movies.sqlite"
         # if sys.platform == "win32":
         #     DB_FILE = "/home/edward/sandbox/murach/murach/python/_db/movies.sqlite"
@@ -87,6 +88,43 @@ def get_movies_by_year(year):
         movies.append(make_movie(row))
     return movies
 
+# Step 3: add a get_movie() function that gets a movie object for the specified movie ID
+def get_movie_by_id(id):
+    # accepting an id param and using the id in the where clause
+    query = '''SELECT movieID, Movie.name, year, minutes,
+                    Movie.categoryID as categoryID,
+                    Category.name as categoryName
+            FROM Movie JOIN Category
+                    ON Movie.categoryID = Category.categoryID
+            WHERE movieID = ?'''
+    with closing(conn.cursor()) as c:
+        c.execute(query, (id,))
+        results = c.fetchall()
+
+    movies = []
+    for row in results:
+        movies.append(make_movie(row))
+    return movies
+
+# Step 5 add get_movies_by_minutes() function that gets movie list by runing time
+# less than minutes passed to it as a param
+def get_movies_by_minutes(minutes):
+    query = '''SELECT movieID, Movie.name, year, minutes,
+                    Movie.categoryID as categoryID,
+                    Category.name as categoryName
+            FROM Movie JOIN Category
+                    ON Movie.categoryID = Category.categoryID
+            WHERE minutes < ?
+            ORDER BY minutes ASC''' # Step 6 (cont) order by minutes ascending
+    with closing(conn.cursor()) as c:
+        c.execute(query, (minutes,))
+        results = c.fetchall()
+
+    movies = []
+    for row in results:
+        movies.append(make_movie(row))
+    return movies
+
 def add_movie(movie):
     sql = '''INSERT INTO Movie (categoryID, name, year, minutes) 
              VALUES (?, ?, ?, ?)'''
@@ -99,5 +137,4 @@ def delete_movie(movie_id):
     sql = '''DELETE FROM Movie WHERE movieID = ?'''
     with closing(conn.cursor()) as c:
         c.execute(sql, (movie_id,))
-        test = conn.commit()
-        print("Test", test)
+        conn.commit()
